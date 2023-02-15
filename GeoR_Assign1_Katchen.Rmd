@@ -1,0 +1,118 @@
+---
+title: "GeoR_Assign1_Katchen"
+author: "Jordan Katchen"
+date: "2023-02-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Library
+
+```{r}
+library(rgbif)
+library(sf)
+library(tidyr)
+```
+
+## Step 1
+Find Country Codes
+```{r}
+enumeration_country()
+```
+
+Search GBIF for Japanese green woodpecker (Picus awokera) occurrence records. Limit the results to 1000.
+```{r}
+GBIF <- occ_search(
+  taxonKey = NULL,
+  scientificName = "Picus awokera",
+  country = NULL,
+  publishingCountry = NULL,
+  hasCoordinate = NULL,
+  typeStatus = NULL,
+  recordNumber = NULL,
+  lastInterpreted = NULL,
+  continent = NULL,
+  geometry = NULL,
+  geom_big = "asis",
+  geom_size = 40,
+  geom_n = 10,
+  recordedBy = NULL,
+  recordedByID = NULL,
+  identifiedByID = NULL,
+  basisOfRecord = NULL,
+  datasetKey = NULL,
+  eventDate = NULL,
+  catalogNumber = NULL,
+  year = NULL,
+  month = NULL,
+  decimalLatitude = NULL,
+  decimalLongitude = NULL,
+  elevation = NULL,
+  depth = NULL,
+  institutionCode = NULL,
+  collectionCode = NULL,
+  hasGeospatialIssue = NULL,
+  issue = NULL,
+  search = NULL,
+  mediaType = NULL,
+  subgenusKey = NULL,
+  repatriated = NULL,
+  phylumKey = NULL,
+  kingdomKey = NULL,
+  classKey = NULL,
+  orderKey = NULL,
+  familyKey = NULL,
+  genusKey = NULL,
+  speciesKey = NULL,
+  establishmentMeans = NULL,
+  degreeOfEstablishment = NULL,
+  protocol = NULL,
+  license = NULL,
+  organismId = NULL,
+  publishingOrg = NULL,
+  stateProvince = NULL,
+  waterBody = NULL,
+  locality = NULL,
+  occurrenceStatus = "PRESENT",
+  gadmGid = NULL,
+  coordinateUncertaintyInMeters = NULL,
+  verbatimScientificName = NULL,
+  eventId = NULL,
+  identifiedBy = NULL,
+  networkKey = NULL,
+  verbatimTaxonId = NULL,
+  occurrenceId = NULL,
+  organismQuantity = NULL,
+  organismQuantityType = NULL,
+  relativeOrganismQuantity = NULL,
+  iucnRedListCategory = NULL,
+  lifeStage = NULL,
+  isInCluster = NULL,
+  limit = 1000,
+  start = 0,
+  fields = "all",
+  return = NULL,
+  facet = NULL,
+  facetMincount = NULL,
+  facetMultiselect = NULL,
+  skip_validate = TRUE,
+  curlopts = list()
+)
+```
+
+Isolate the occurrence data as a TBL (data) from the GBIF list created above.
+```{r}
+Occurence_Data <- GBIF$data
+Occurence_Data <- Occurence_Data %>% drop_na(decimalLatitude) #Remove rows with no lat data
+Occurence_Data <- Occurence_Data %>% drop_na(decimalLongitude) #Remove rows with no Long data
+```
+
+Convert the the Lat and Long data in Occurence_Data to a sf geometry column.
+```{r}
+Occurence_Data_sf <- st_as_sf(Occurence_Data, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
+```
+
+Convert geometry in TBL to ST to SF
