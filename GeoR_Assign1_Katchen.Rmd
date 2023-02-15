@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rgbif)
 library(sf)
 library(tidyr)
+library(spData)        # load map data
 ```
 
 ## Step 1
@@ -115,4 +116,17 @@ Convert the the Lat and Long data in Occurence_Data to a sf geometry column.
 Occurence_Data_sf <- st_as_sf(Occurence_Data, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
 ```
 
-Convert geometry in TBL to ST to SF
+Where are these woodpeckers found? Plotting the occurence records on a world map.
+```{r}
+world_data <- world
+plot(st_geometry(world))
+plot(st_geometry(Occurence_Data_sf), add = TRUE, cex = .01, col = "blue")
+```
+
+Focusing in on the country the these woodpeckers are endemic to.
+```{r}
+japan <- world[world$name_long == "Japan", ]
+plot(st_geometry(japan), expandBB = c(1, 1, 1, 1), col = "grey70", lwd = 1)
+plot(st_geometry(Occurence_Data_sf), add = TRUE, cex = .4, col = "red")
+plot(st_geometry(world), add = TRUE)
+```
