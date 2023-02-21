@@ -1,0 +1,103 @@
+---
+title: "GeoR_Assingment1_Katchen"
+author: "Jordan Katchen"
+date: "2023-02-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## library
+This chunk contains all the packages required to complete this assignment. You may load additional packages if you wish, however, it is not required.
+
+```{r}
+library(rgbif)     # Used to load GBIF data
+library(sf)
+library(tidyr)
+library(rnaturalearth)        # Used to load map data
+library(geodata)    # Used to load in raster data
+library(terra)
+```
+
+## Data Load
+The bellow chunks load the data required for this assignment.
+
+Search GBIF for Japanese green woodpecker (Picus awokera) occurrence records. Limit the results to 2500. Returns an object of class gbif, which is a S3 class list, with slots for metadata (meta), the occurrence data itself (data), the taxonomic hierarchy data (hier), and media metadata (media).
+```{r}
+GBIF <- occ_search(
+  scientificName = "Picus awokera",
+  limit = 2500
+)
+```
+
+Isolating the occurrence data from the gbif object.
+```{r}
+Occurence_Data <- GBIF$data
+```
+
+Loading in a detailed map of the world from the naturalearth database. The map is loaded in as an sf object.
+```{r}
+World_map_detail <- ne_download(
+  scale = 10,
+  type = "countries",
+  category = c("cultural"),
+  destdir = tempdir(),
+  load = TRUE,
+  returnclass = c("sf")
+)
+```
+
+## Assingnment
+
+### Part 1
+The first step will be to remove all rows with NA values in the latitude and longitude columns from the Occurence_Data. Note, there are many different ways to accomplish this task!
+
+```{r}
+
+```
+
+### Part 2
+Convert the Occurence_Data to an sf object.
+
+```{r}
+
+```
+
+### Part 3
+Where in the world are Japanese green woodpeckers found? Plot the occurrence records on a world map.
+
+```{r}
+
+```
+
+### Part 4
+Now that you have narrowed down the region of the world these woodpeckers are found, create a smaller map, just large enough to include all the occurrence records. Try your best to make your map visually appealing and functional, so feel free to be creative.
+
+```{r}
+
+```
+
+### Part 5
+
+Download climate data. The below chunk downloads a raster that contains the average monthly temperature for a specific country. 
+
+*Insert the name of the country identified in the previous chunks between the quotation marks.*
+```{r}
+Climate_Raster <- worldclim_country(country = "INSERT HERE", var = "tavg", res = 10, path=tempdir())
+```
+
+### Part 6
+The climate data raster (Climate_Raster) contains 12 layers. Each layer of the raster is the average temperature each month. Subset the raster to isolate only the December layer.
+
+```{r}
+
+```
+
+### Part 7
+Plot the climate data raster onto the map created in Part 4. Note, when using the plot function, the order you add plot layers is important.
+
+```{r}
+
+```

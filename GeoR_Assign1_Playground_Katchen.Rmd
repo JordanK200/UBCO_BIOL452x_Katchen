@@ -18,7 +18,7 @@ library(tidyr)
 library(rnaturalearth)        # Used to load map data
 ```
 
-## Testing
+## Code
 
 Search GBIF for Japanese green woodpecker (Picus awokera) occurrence records. Limit the results to 1000.
 ```{r}
@@ -139,4 +139,19 @@ plot(st_geometry(Occurence_Data_sf), add = TRUE, cex = .4, col = "red")
 plot(st_geometry(World_map_detail), add = TRUE)
 ```
 
-Adding country labels
+Adding a raster temperature data.
+```{r}
+library(geodata)
+
+# Download the temperature data for Japan
+Climate_Raster <- worldclim_country(country = "Japan", var = "tavg", res = 10, path=tempdir())
+
+# Print the raster object
+print(Climate_Raster)
+```
+
+```{r}
+library(terra)
+Climate_Raster11 = subset(Climate_Raster, 11)
+plot(Climate_Raster11)
+```
