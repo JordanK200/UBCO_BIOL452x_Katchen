@@ -54,37 +54,45 @@ World_map_detail <- ne_download(
 
 ## Assingnment Key
 
-### Part 1
+### Part 1 (1 Available Point)
 The first step will be to remove all rows with NA values in the latitude and longitude columns from the Occurence_Data. Note, there are many different ways to accomplish this task!
 
 **KEY:** This is just one of many ways to remove NA values.
+
+**Grading:** 1 point for successfully removing NA rows.
 
 ```{r}
 Occurence_Data <- Occurence_Data %>% drop_na(decimalLatitude) #Remove rows with no lat data
 Occurence_Data <- Occurence_Data %>% drop_na(decimalLongitude) #Remove rows with no Long data
 ```
 
-### Part 2
+### Part 2 (2 Available Point)
 Convert the Occurence_Data to an sf object.
 
 **KEY:** Don't forget to assign a CRS! Looking at the "geodeticDatum" column in Occurence_Data, you see that all occurrence records use WGS84. This is typical for GBIF data.
+
+**Grading:** 1 point for successfully converting to a sf object. 1 point for assigning the correct CRS.
 
 ```{r}
 Occurence_Data_sf <- st_as_sf(Occurence_Data, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
 ```
 
-### Part 3
+### Part 3 (1 Available Point)
 Where in the world are Japanese green woodpeckers found? Plot the occurrence records on a world map.
 
 **KEY:** This figure shows that this species of woodpecker is endemic to Japan and its surrounding islands.
+
+**Grading:** 1 point for successfully creating a map that illustrates where in the world these occurrence records are located.
 
 ```{r}
 plot(st_geometry(World_map_detail)) #Plot the world map
 plot(st_geometry(Occurence_Data_sf), add = TRUE, cex = .01, col = "red") #Add the occurrence records onto to world map. The cex argument determines the symbol size for occurrence points. The col argument determines the colour of the occurrence points.
 ```
 
-### Part 4
+### Part 4 (1 Available Point)
 Now that you have narrowed down the region of the world these woodpeckers are found, create a smaller map, just large enough to include all the occurrence records. Try your best to make your map visually appealing and functional, so feel free to be creative.
+
+**Grading:** 1 point for successfully creating a zoomed in map of Japan. 1/2 bonus point available for maps that use colour. 1/2 bonus point available for maps that include the borders of neighboring countries.
 
 ```{r}
 japan <- World_map_detail[World_map_detail$SOVEREIGNT == "Japan", ] #Creating an sf object that only contains a single row for Japan.
@@ -93,27 +101,34 @@ plot(st_geometry(Occurence_Data_sf), add = TRUE, cex = .4, col = "red") #Adding 
 plot(st_geometry(World_map_detail), add = TRUE) #Adding a map of the whole world. This helps orientate the audience by showing Korea and the edge of China.
 ```
 
-### Part 5
+### Part 5 (1 Available Point)
 Download climate data. The below chunk downloads a raster that contains the average monthly temperature for a specific country. 
 
 *Insert the name of the country identified in the previous chunks between the quotation marks.*
 
 *KEY:* The country we want is Japan.
+
+**Grading:** 1 point for successfully applying Japan to the country argument.
+
 ```{r}
 Climate_Raster <- worldclim_country(country = "Japan", var = "tavg", res = 10, path=tempdir())
 ```
 
-### Part 6
-The climate data raster (Climate_Raster) contains 12 layers. Each layer of the raster is the average temperature each month. Subset the raster to isolate only the December layer.
+### Part 6 (1 Available Point)
+The climate data raster (Climate_Raster) contains 12 layers. Each layer of the raster is the average temperature for a given month. Subset the raster to isolate only the December layer.
 
-*KEY:* The layers are in order from January to December. Therefore, you can isolate the layer for December by subsetting out layer 12.
+*KEY:* The layers are in order from January to December. Therefore, you can isolate the layer for December by sub-setting out layer 12.
+
+**Grading:** 1 point for successfully sub-setting the month of December.
 
 ```{r}
 Climate_Raster11 = subset(Climate_Raster, 12)
 ```
 
-### Part 7
-Plot the climate data raster onto the map created in Part 4. Note, when using the plot function, the order you add plot layers is important.
+### Part 7 (2 Available Point)
+Plot the climate data raster onto the map created in Part 4. Make sure to include occurrence records. Note, when using the plot function, the order you add plot layers is very important.
+
+**Grading:** 1 point for successfully plotting the climate data. 1 point for plotting the occurrence records on-top of the climate raster.
 
 ```{r}
 plot(Climate_Raster11) #Adding the climate raster first. This makes it the base for our plot, everything else we add is added on top of this raster.
